@@ -1,53 +1,31 @@
 import './App.css';
 import bootstrap from './styles/bootstrap.css'
-import { useState } from 'react';
-import ListedItem from './components/listedItem';
+import React, { useState } from 'react';
+import ListedItem from './components/ListedItem';
+import useApp from './components/useApp'
+import { recipesMock as recipes, ingredientsListMock as ingredientsList } from './mocks/mocks';
 
 
 const App = () => {
 
-  const [selectedRecipe, setSelectedRecipe] = useState(0)
-  const [listToCreate, setListToCreate] = useState([])
+  const {
+    selectedRecipe,
+    name,
+    listToCreate,
+    ingredientsListFromApi,
+    setSelectedRecipe, setName, setListToCreate, setIngredientsListFromApi, getIngredients
+  } = useApp();
 
-  const ingredientsList = {
-    0: {
-      name: "fraise",
-      icon: "ico.png",
-      unit: ""
-    },
-    1: {
-      name: "noix de coco",
-      icon: "ico.png",
-      unit: "g"
-    },
-    2: {
-      name: "riz",
-      icon: "ico.png",
-      unit: "g"
-    },
-    3: {
-      name: "lait",
-      icon: "ico.png",
-      unit: "L"
-    }
-  }
+  React.useEffect(() => {
+    fetch('https://api.nal.usda.gov/fdc/v1/food/454004?&api_key=IcDKnpmcqO8Uzyk6ryX87d1HDzHI8shkekq0qIox')
+      .then(results => results.json())
+      .then(data => {
+        const calories = data.labelNutrients.calories.value
+        console.log(calories)
+      });
+    getIngredients();
+  }, []); 
 
-  const recipes = {
-    0: {
-      name: "Riz au lait",
-      ingredients: [
-        {
-          id: 3,
-          quantity: 3
-        },
-        {
-          id: 2,
-          quantity: 500
-        }
-
-      ]
-    },
-  }
 
   return (
     <>
@@ -59,12 +37,12 @@ const App = () => {
               <ListedItem key={key} id={key} name={ingredientsList[key].name} unit={ingredientsList[key].unit} list={listToCreate} setList={setListToCreate}/>
             )}
             {listToCreate.length > 0 &&
-              <li className="list-group-item list-group-item-success d-flex flex-column align-items-center" onClick={() => {console.log(listToCreate)}}>
+              <li className="list-group-item list-group-item-success d-flex flex-column align-items-center">
                 <div className="h4">
                   Nommez pour ajouter : 
                 </div>
                 <input type="text"/>
-                <div className="bg-secondary rounded-3 px-3 mt-2 text-white">
+                <div className="bg-secondary rounded-3 px-3 mt-2 text-white" onClick={() => {console.log(listToCreate)}}>
                   Valider
                 </div>
               </li>
@@ -97,7 +75,7 @@ const App = () => {
               </div>
               :
               <div className="h2">
-                Sélectionnez une recette
+                Sélectionnez une recette 
               </div>
             }
           </div>

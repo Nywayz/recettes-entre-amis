@@ -1,7 +1,7 @@
+import useListedItem from "./useListedItem";
 
-import { useState } from 'react';
 
-interface IlistedItem {
+export interface IlistedItem {
     id: Number,
     name: String,
     unit: String,
@@ -10,37 +10,13 @@ interface IlistedItem {
 }
 
 const ListedItem = (props: IlistedItem) => {
-    const [open, setOpen] = useState(false)
-
-    const capitalize = (s) => {
-      if (typeof s !== 'string') return ''
-      return s.charAt(0).toUpperCase() + s.slice(1)
-    }
-
-    const addOne = () => {
-        setOpen(true)
-        props.setList(list => [...list, [props.id, "1"]])
-    }
-
-    const addThisOne = (value) => {
-        delThisOne()
-        props.setList(list => [...list, [props.id, value]])
-    }
-
-    const delThisOne = () => {
-        for(let i = 0; i < props.list.length; i++){
-            if(props.list[i][0] === props.id){
-                let removedArray = props.list
-                removedArray.splice(i, 1)
-                props.setList(removedArray)
-            }
-        }
-    }
-
-    const close = () => {
-        delThisOne()
-        setOpen(false)
-    }
+    const {
+        open,
+        currentValue,
+        addOne,
+        close,
+        addThisOne, capitalize, setCurrentValue
+    } = useListedItem(props);
 
   return (
     <>
@@ -48,7 +24,8 @@ const ListedItem = (props: IlistedItem) => {
         onClick={() => {open ? close() : addOne()}}>
             {capitalize(props.name)} {open ?
 
-                <div onClick={(e) => e.stopPropagation()}><input onChange={(e) => {addThisOne(e.target.value)}} style={{width: "40px"}} type="number" min={1}/>
+                <div onClick={(e) => e.stopPropagation()}>
+                    <input onChange={(e) => {addThisOne(e.target.value); setCurrentValue(e.target.value)}} style={{width: "40px"}} type="number" min={1} value={currentValue}/>
                     {props.unit !== "" ? props.unit : "ㅤ"}
                 </div>
 
