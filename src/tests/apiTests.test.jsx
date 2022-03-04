@@ -25,5 +25,5 @@ test("getIngredients", async () =>{
 
 test("show result", async () => {
     const { container } = render(<App />);
-    await waitFor(() => screen.getByText(/Faise/i));
+    await waitFor(() => screen.getByText(/Fraise/i));
   });
