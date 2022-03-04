@@ -8,7 +8,7 @@ import App from "../App"
 
 
 const server = setupServer(
-    rest.get("http://my-api/ingredients", (req, res, ctx) => {
+    rest.get("https://api-fruits.herokuapp.com/api/ingredients", (req, res, ctx) => {
         return res(ctx.json(ingredientsListMock))
     })
 )

@@ -3,7 +3,7 @@ import bootstrap from './styles/bootstrap.css'
 import React, { useState } from 'react';
 import ListedItem from './components/ListedItem';
 import useApp from './components/useApp'
-import { recipesMock as recipes, ingredientsListMock as ingredientsList } from './mocks/mocks';
+import { recipesMock as recipes, ingredientsListMock as ingredientsList, ingredientsListMock, recipesMock } from './mocks/mocks';
 
 
 const App = () => {
@@ -13,7 +13,8 @@ const App = () => {
     name,
     listToCreate,
     ingredientsListFromApi,
-    setSelectedRecipe, setName, setListToCreate, setIngredientsListFromApi, getIngredients
+    recipesListFromApi,
+    setSelectedRecipe, setName, setListToCreate, setIngredientsListFromApi, getIngredients, getRecipes
   } = useApp();
 
   React.useEffect(() => {
@@ -24,6 +25,8 @@ const App = () => {
         console.log(calories)
       });
     getIngredients();
+    getRecipes();
+    console.log(recipesMock)
   }, []); 
 
 
@@ -33,16 +36,16 @@ const App = () => {
         <div className="row">
 
           <ul className="list-group col-3 p-3">
-            {Object.keys(ingredientsList).map((key) => 
-              <ListedItem key={key} id={key} name={ingredientsList[key].name} unit={ingredientsList[key].unit} list={listToCreate} setList={setListToCreate}/>
+            {Object.keys(ingredientsListFromApi).map((key) => 
+              <ListedItem key={key} id={key} name={ingredientsListFromApi[key].name} unit={ingredientsListFromApi[key].unit} list={listToCreate} setList={setListToCreate}/>
             )}
             {listToCreate.length > 0 &&
               <li className="list-group-item list-group-item-success d-flex flex-column align-items-center">
                 <div className="h4">
                   Nommez pour ajouter : 
                 </div>
-                <input type="text"/>
-                <div className="bg-secondary rounded-3 px-3 mt-2 text-white" onClick={() => {console.log(listToCreate)}}>
+                <input type="text" className="nameInput"/>
+                <div className="bg-secondary createRecipe rounded-3 px-3 mt-2 text-white" onClick={() => {console.log(listToCreate)}}>
                   Valider
                 </div>
               </li>
@@ -51,10 +54,10 @@ const App = () => {
           </ul>
 
           <ul className="list-group col-3 p-3">
-            {Object.keys(recipes).map((key) => (
-              <li key={key} className={(key === selectedRecipe) ? "list-group-item active" : "list-group-item"}
+            {Object.keys(recipesListFromApi).map((key) => (
+              <li key={key} className={(key === selectedRecipe) ? "list-group-item active recipe" : "list-group-item recipe"}
               onClick={() => {setSelectedRecipe(key)}}>
-                    {recipes[key].name}
+                    {recipesListFromApi[key].name}
               </li>
           ))}
           </ul>
@@ -66,9 +69,9 @@ const App = () => {
                   Votre recette :
                 </div>
                 <ul className="list-group list-group-flush">
-                  {recipes[selectedRecipe].ingredients.map((ingredient) =>
+                  {recipesListFromApi[selectedRecipe].ingredients.map((ingredient) =>
                     <li key={ingredient.id} className="list-group-item">
-                      {ingredient.quantity}{ingredientsList[ingredient.id].unit} de {ingredientsList[ingredient.id].name}
+                      {ingredient.quantity}{ingredientsListFromApi[ingredient.id].unit} de {ingredientsListFromApi[ingredient.id].name}
                     </li>
                   )}
                   </ul>

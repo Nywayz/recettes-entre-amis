@@ -20,7 +20,7 @@ const ListedItem = (props: IlistedItem) => {
 
   return (
     <>
-        <li className={open ? "list-group-item list-group-item-info d-flex justify-content-between" : "list-group-item d-flex justify-content-between"}
+        <li className={open ? "list-group-item ingredient list-group-item-info d-flex justify-content-between" : "list-group-item ingredient d-flex justify-content-between"}
         onClick={() => {open ? close() : addOne()}}>
             {capitalize(props.name)} {open ?
 
